@@ -44,6 +44,44 @@ output_file="$homedir/Desktop/kiosk.sh"
 cat <<EOL > $output_file
 #!/bin/bash
 
+log_file="$homedir/Desktop/logs.txt"
+
+# Function to log messages with timestamps
+log_message() {
+  local message=$1
+  echo "$(date): $message" >> "$log_file"
+}
+
+# Function to check internet connectivity
+check_internet() {
+  wget -q --spider http://google.com
+  return $?
+}
+
+# Check internet connectivity with retries
+attempts=0
+max_attempts=3
+interval=5
+
+while [ $attempts -lt $max_attempts ]; do
+  if check_internet; then
+    echo "Internet is connected"
+    break
+  else
+    log_message "Attempt $(($attempts + 1)): No internet connection. Retrying in $interval seconds..."
+    attempts=$(($attempts + 1))
+    sleep $interval
+  fi
+done
+
+if [ $attempts -eq $max_attempts ]; then
+  log_message "Failed to connect to the internet after $max_attempts attempts."
+  echo "No internet connection. Please check your network. See logs.txt for details."
+  exit 1
+fi
+
+# Your existing script content here...
+
 # Sleep before execution (if necessary)
 sleep 8
 
