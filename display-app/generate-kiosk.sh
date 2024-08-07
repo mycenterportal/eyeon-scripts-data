@@ -38,7 +38,7 @@ primary_width="$primary_width"
 EOL
 
 # Create the output file
-output_file="kiosk.sh"
+output_file="$homedir/Desktop/kiosk.sh"
 
 # Write the content to the output file
 cat <<EOL > $output_file
