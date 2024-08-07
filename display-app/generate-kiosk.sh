@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Automatically determine the home directory
+homedir=$(eval echo ~$USER)
+
 # Define the input file
-input_file="values.txt"
+input_file="$homedir/Desktop/eyeon.txt"
 
 # Function to read input from user with default value
 read_input() {
@@ -26,13 +29,13 @@ fi
 
 # Save the inputs to the file
 cat <<EOL > $input_file
+# Run below command to generate updated kiosk.sh
+# wget -O /tmp/eyeon-generate-kiosk.sh https://mycenterportal.github.io/eyeon-scripts-data/display-app/generate-kiosk.sh && sh /tmp/eyeon-generate-kiosk.sh
+
 url1="$url1"
 url2="$url2"
 primary_width="$primary_width"
 EOL
-
-# Automatically determine the home directory
-homedir=$(eval echo ~$USER)
 
 # Create the output file
 output_file="kiosk.sh"
@@ -101,3 +104,4 @@ chmod +x $output_file
 
 echo "$output_file file is generated."
 
+rm -- "$0"
