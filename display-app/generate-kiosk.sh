@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Automatically determine the home directory
-homedir=$(eval echo ~$USER)
+homeDir=$(eval echo ~$USER)
+desktopDir="$homeDir/Desktop"
+scriptsDir="$homeDir/scripts"
+
+mkdir -p "$scriptsDir"
 
 # Define the input file
-input_file="$homedir/Desktop/eyeon.txt"
+variablesFile="$desktopDir/variables.txt"
 
 # Function to read input from user with default value
 read_input() {
@@ -16,8 +20,8 @@ read_input() {
 }
 
 # Load previous values if they exist
-if [ -f "$input_file" ]; then
-  source "$input_file"
+if [ -f "$variablesFile" ]; then
+  source "$variablesFile"
   read_input "First URL" "$url1" url1
   read_input "Second URL" "$url2" url2
   read_input "Screen width" "$primary_width" primary_width
@@ -28,7 +32,7 @@ else
 fi
 
 # Save the inputs to the file
-cat <<EOL > $input_file
+cat <<EOL > $variablesFile
 # Run below command to generate updated kiosk.sh
 # wget -O /tmp/eyeon-generate-kiosk.sh https://mycenterportal.github.io/eyeon-scripts-data/display-app/generate-kiosk.sh && sh /tmp/eyeon-generate-kiosk.sh
 
@@ -38,13 +42,14 @@ primary_width="$primary_width"
 EOL
 
 # Create the output file
-output_file="$homedir/Desktop/kiosk.sh"
+output_file="$homeDir/Desktop/kiosk.sh"
 
 # Write the content to the output file
 cat <<EOL > $output_file
 #!/bin/bash
 
-log_file="$homedir/Desktop/logs.txt"
+log_file="$scriptsDir/logs.txt"
+touch "$log_file"
 
 # Function to log messages with timestamps
 log_message() {
@@ -104,11 +109,11 @@ monitor1="--window-position=0,0"
 monitor2="--window-position=\${primary_width},0"
 
 # Home directory of the current user
-homedir="$homedir"
+homeDir="$homeDir"
 
 # Chrome user data directories
-chrome1="\${homedir}/ChromeData/1"
-chrome2="\${homedir}/ChromeData/2"
+chrome1="\${homeDir}/ChromeData/1"
+chrome2="\${homeDir}/ChromeData/2"
 
 # Create directories if they do not exist
 mkdir -p "\$chrome1" "\$chrome2"
