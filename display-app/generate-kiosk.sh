@@ -3,12 +3,12 @@
 # Automatically determine the home directory
 homeDir=$(eval echo ~$USER)
 desktopDir="$homeDir/Desktop"
-scriptsDir="$homeDir/scripts"
+scriptsDir="$homeDir/eyeon-scripts"
 
 mkdir -p "$scriptsDir"
 
 # Define the input file
-variablesFile="$desktopDir/variables.txt"
+variablesFile="$scriptsDir/variables.txt"
 
 # Function to read input from user with default value
 read_input() {
@@ -24,11 +24,11 @@ if [ -f "$variablesFile" ]; then
   source "$variablesFile"
   read_input "First URL" "$url1" url1
   read_input "Second URL" "$url2" url2
-  read_input "Screen width" "$primary_width" primary_width
+  read_input "Screen width" "$screen_width" screen_width
 else
   read -p "First URL: " url1
   read -p "Second URL: " url2
-  read -p "Screen width: " primary_width
+  read -p "Screen width: " screen_width
 fi
 
 # Save the inputs to the file
@@ -38,11 +38,11 @@ cat <<EOL > $variablesFile
 
 url1="$url1"
 url2="$url2"
-primary_width="$primary_width"
+screen_width="$screen_width"
 EOL
 
 # Create the output file
-output_file="$homeDir/Desktop/kiosk.sh"
+output_file="$desktopDir/kiosk.sh"
 
 # Write the content to the output file
 cat <<EOL > $output_file
@@ -104,9 +104,9 @@ flags="--disable-pinch
 --v=1"
 
 # Windows Positions
-primary_width=$primary_width # Primary or left monitor width in pixels
+screen_width=$screen_width # Primary or left monitor width in pixels
 monitor1="--window-position=0,0"
-monitor2="--window-position=\${primary_width},0"
+monitor2="--window-position=\${screen_width},0"
 
 # Home directory of the current user
 homeDir="$homeDir"
