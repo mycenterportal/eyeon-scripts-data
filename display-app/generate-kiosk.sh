@@ -42,19 +42,23 @@ screen_width="$screen_width"
 EOL
 
 # Create the output file
-output_file="$desktopDir/kiosk.sh"
+kioskFile="$desktopDir/kiosk.sh"
 
 # Write the content to the output file
-cat <<EOL > $output_file
+cat <<EOL > $kioskFile
 #!/bin/bash
 
-log_file="$scriptsDir/logs.txt"
-touch "$log_file"
+homeDir=\$(eval echo ~\$USER)
+desktopDir="\$homeDir/Desktop"
+scriptsDir="\$homeDir/eyeon-scripts"
+
+log_file="\$scriptsDir/logs.txt"
+touch \$log_file
 
 # Function to log messages with timestamps
 log_message() {
   local message=$1
-  echo "$(date): $message" >> "$log_file"
+  echo "$(date): \$message" >> "\$log_file"
 }
 
 # Function to check internet connectivity
@@ -68,19 +72,19 @@ attempts=0
 max_attempts=3
 interval=5
 
-while [ $attempts -lt $max_attempts ]; do
+while [ \$attempts -lt \$max_attempts ]; do
   if check_internet; then
     echo "Internet is connected"
     break
   else
-    log_message "Attempt $(($attempts + 1)): No internet connection. Retrying in $interval seconds..."
-    attempts=$(($attempts + 1))
-    sleep $interval
+    log_message "Attempt \$((\$attempts + 1)): No internet connection. Retrying in \$interval seconds..."
+    attempts=\$((\$attempts + 1))
+    sleep \$interval
   fi
 done
 
-if [ $attempts -eq $max_attempts ]; then
-  log_message "Failed to connect to the internet after $max_attempts attempts."
+if [ \$attempts -eq \$max_attempts ]; then
+  log_message "Failed to connect to the internet after \$max_attempts attempts."
   echo "No internet connection. Please check your network. See logs.txt for details."
   exit 1
 fi
@@ -107,9 +111,6 @@ flags="--disable-pinch
 screen_width=$screen_width # Primary or left monitor width in pixels
 monitor1="--window-position=0,0"
 monitor2="--window-position=\${screen_width},0"
-
-# Home directory of the current user
-homeDir="$homeDir"
 
 # Chrome user data directories
 chrome1="\${homeDir}/ChromeData/1"
@@ -143,8 +144,8 @@ chromium "\$url2" \$flags \$monitor2 --user-data-dir="\$chrome2" &> /dev/null & 
 EOL
 
 # Make the output file executable
-chmod +x $output_file
+chmod +x $kioskFile
 
-echo "$output_file file is generated."
+echo "$kioskFile file is generated."
 
-rm -- "$0"
+# rm -- "$0"
