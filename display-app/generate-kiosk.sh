@@ -21,7 +21,7 @@ read_input() {
 
 # Load previous values if they exist
 if [ -f "$variablesFile" ]; then
-  source "$variablesFile"
+  . "$variablesFile"
   read_input "First URL" "$url1" url1
   read_input "Second URL" "$url2" url2
   read_input "Screen width" "$screen_width" screen_width
